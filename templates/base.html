@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CasinoSim{% endblock %}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .nav-bar {
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.8), rgba(30, 30, 30, 0.8));
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            list-style: none;
+            padding: 5px;
+        }
+
+        .nav-item {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9em;
+            padding: 6px 12px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(255, 204, 0, 0.2);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(90deg, #ffcc00, #ffd700);
+            color: black;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(255, 204, 0, 0.5);
+        }
+
+        @media (min-width: 768px) {
+            .nav-item {
+                font-size: 1.1em;
+                padding: 8px 20px;
+            }
+        }
+
+        .content {
+            margin-top: 60px;
+            padding: 20px;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="nav-bar">
+        <ul class="nav-menu">
+            <li><a href="{{ url_for('inicio') }}" class="nav-item {% if request.endpoint == 'inicio' %}active{% endif %}">Inicio</a></li>
+            <li><a href="{{ url_for('profile') }}" class="nav-item {% if request.endpoint == 'profile' %}active{% endif %}">Perfil</a></li>
+            <li><a href="{{ url_for('casino') }}" class="nav-item {% if request.endpoint == 'casino' %}active{% endif %}">Casino</a></li>
+            <li><a href="{{ url_for('trabajar') }}" class="nav-item {% if request.endpoint == 'trabajar' %}active{% endif %}">Trabajar</a></li>
+            <li><a href="{{ url_for('banco') }}" class="nav-item {% if request.endpoint == 'banco' %}active{% endif %}">Banco</a></li>
+            <li><a href="{{ url_for('tienda') }}" class="nav-item {% if request.endpoint == 'tienda' %}active{% endif %}">Tienda</a></li>
+        </ul>
+    </nav>
+
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

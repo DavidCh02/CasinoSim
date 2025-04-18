@@ -1,454 +1,309 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CasinoSim - Perfil</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
+{% extends "base.html" %}
 
-        body {
-            background-image: url('/static/img/fondo_profile.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            min-height: 100vh;
-            margin: 0;
-            padding-top: 60px;
-            color: #fff;
-        }
+{% block title %}CasinoSim - Perfil{% endblock %}
 
-        .nav-bar {
-            background: linear-gradient(90deg, rgba(0, 0, 0, 0.8), rgba(30, 30, 30, 0.8));
-            padding: 15px 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .nav-menu {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            list-style: none;
-        }
-
-        .nav-item {
-            color: white;
-            text-decoration: none;
-            font-size: 1.1em;
-            padding: 8px 20px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .nav-item:hover {
-            background-color: rgba(255, 204, 0, 0.2);
-        }
-
-        .nav-item.active {
-            background: linear-gradient(90deg, #ffcc00, #ffd700);
-            color: black;
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(255, 204, 0, 0.5);
-        }
-
-        .profile-container {
-            margin-top: 80px;
-            padding: 20px;
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 30px;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .profile-card {
-            background: linear-gradient(145deg, rgba(30, 30, 30, 0.95), rgba(20, 20, 20, 0.98));
-            border: 1px solid rgba(255, 204, 0, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            color: #ffffff;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .profile-card h2 {
-            color: #ffcc00;
-            margin: 10px 0;
-            font-size: 1.5em;
-            font-weight: 600;
-        }
-
-        .profile-photo img {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 3px solid #ffcc00;
-            transition: transform 0.3s ease;
-        }
-
-        .profile-photo img:hover {
-            transform: scale(1.05);
-        }
-
-        .update-photo-btn {
-            background: linear-gradient(90deg, #ffcc00, #ffd700);
-            color: black;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            margin-top: 15px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .update-photo-btn:hover {
-            background: linear-gradient(90deg, #ffd700, #ffcc00);
-            box-shadow: 0 4px 10px rgba(255, 204, 0, 0.5);
-        }
-
-        .main-content {
-            background: linear-gradient(145deg, rgba(30, 30, 30, 0.95), rgba(20, 20, 20, 0.98));
-            border: 1px solid rgba(255, 204, 0, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .money-containers {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 30px;
-        }
-
-        .money-box {
-            background: rgba(255, 204, 0, 0.1);
-            border: 1px solid rgba(255, 204, 0, 0.3);
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            min-width: 200px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .money-box h3 {
-            color: #ffcc00;
-            margin-bottom: 10px;
-            font-size: 1.2em;
-            font-weight: 600;
-        }
-
-        .bills-section {
-            margin-top: 30px;
-        }
-
-        .bills-section h2 {
-            color: #ffcc00;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            font-weight: 600;
-        }
-
-        .bills-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .bill-item {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 204, 0, 0.3);
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .pay-btn {
-            background: linear-gradient(90deg, #ffcc00, #ffd700);
-            color: black;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            margin-top: 10px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .pay-btn:hover {
-            background: linear-gradient(90deg, #ffd700, #ffcc00);
-            box-shadow: 0 4px 10px rgba(255, 204, 0, 0.5);
-        }
-
-        .error-popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(145deg, rgba(30, 30, 30, 0.95), rgba(20, 20, 20, 0.98));
-            padding: 20px 40px;
-            border-radius: 10px;
-            border: 2px solid #ff3333;
-            color: #ff3333;
-            z-index: 1000;
-            text-align: center;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-        }
-    </style>
-</head>
-<body>
-    <!-- Navegación -->
-    <nav class="nav-bar">
-        <ul class="nav-menu">
-            <li><a href="#" class="nav-item">Inicio</a></li>
-            <li><a href="#" class="nav-item active">Perfil</a></li>
-            <li><a href="#" class="nav-item">Casino</a></li>
-            <li><a href="#" class="nav-item">Trabajar</a></li>
-            <li><a href="#" class="nav-item">Banco</a></li>
-            <li><a href="#" class="nav-item">Tienda</a></li>
-        </ul>
-    </nav>
-
-    <!-- Contenido principal -->
-    <div class="profile-container">
-        <div class="profile-card">
-            <div class="profile-photo">
-                <img src="{{ avatar_url }}" alt="Avatar de usuario">
-            </div>
-            <form id="avatarForm" enctype="multipart/form-data">
-                <input type="file" id="photoInput" name="photo" accept="image/*" style="display: none;">
-                <button type="button" class="update-photo-btn" onclick="document.getElementById('photoInput').click()">
-                    Actualizar foto
-                </button>
-            </form>
-            <h2>{{ username }}</h2>
-            <p class="creation-date">{{ fecha_creacion }}</p>
-        </div>
-
-        <div class="main-content">
-            <div class="money-containers">
-                <div class="money-box">
-                    <h3>Dinero en efectivo:</h3>
-                    <p>${{ dinero_efectivo }}</p>
-                </div>
-                <div class="money-box">
-                    <h3>Dinero en el banco:</h3>
-                    <p>${{ dinero_banco }}</p>
-                </div>
-            </div>
-
-            <div class="bills-section">
-                <h2>Facturas:</h2>
-                <div class="bills-container">
-                    <div class="bill-item">
-                        <h3>Luz:</h3>
-                        <p>{% if tiene_factura_luz %}${{ factura_luz }}{% else %}{{ factura_luz }}{% endif %}</p>
-                        {% if tiene_factura_luz %}
-                        <button class="pay-btn" onclick="pagarFactura('luz')">Pagar</button>
-                        {% endif %}
-                    </div>
-                    <div class="bill-item">
-                        <h3>Agua:</h3>
-                        <p>{% if tiene_factura_agua %}${{ factura_agua }}{% else %}{{ factura_agua }}{% endif %}</p>
-                        {% if tiene_factura_agua %}
-                        <button class="pay-btn" onclick="pagarFactura('agua')">Pagar</button>
-                        {% endif %}
-                    </div>
-                    <div class="bill-item">
-                        <h3>Vivienda:</h3>
-                        <p>{% if tiene_factura_vivienda %}${{ factura_vivienda }}{% else %}{{ factura_vivienda }}{% endif %}</p>
-                        {% if tiene_factura_vivienda %}
-                        <button class="pay-btn" onclick="pagarFactura('vivienda')">Pagar</button>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Pop-up de error -->
-    <div class="error-popup" id="errorPopup"></div>
-
-    <script>
-        async function pagarFactura(tipo) {
-            try {
-                const response = await fetch('/pagar_factura', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ tipo: tipo })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    mostrarError(data.mensaje);
-                } else {
-                    // Recargar la página para actualizar los montos
-                    location.reload();
-                }
-            } catch (error) {
-                mostrarError('Error al procesar el pago');
-            }
-        }
-
-        function mostrarError(mensaje) {
-            const popup = document.getElementById('errorPopup');
-            popup.textContent = mensaje;
-            popup.style.display = 'block';
-
-            setTimeout(() => {
-                popup.style.display = 'none';
-            }, 3000);
-        }
-
-        // Agregar esto al final del archivo, antes del </body>
-        document.getElementById('photoInput').addEventListener('change', async function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const formData = new FormData();
-            formData.append('photo', file);
-
-            try {
-                const response = await fetch('/update_avatar', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    // Actualizar la imagen inmediatamente
-                    document.querySelector('.profile-photo img').src = data.avatar_url + '?t=' + new Date().getTime();
-                } else {
-                    mostrarError(data.error || 'Error al actualizar la foto');
-                }
-            } catch (error) {
-                mostrarError('Error al procesar la imagen');
-            }
-        });
-
-        // Mantener las otras funciones existentes (pagarFactura y mostrarError)
-    </script>
-</body>
-</html>
-
+{% block extra_css %}
 <style>
-    .nav-menu {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-        padding: 5px;
-    }
-
-    .nav-item {
-        font-size: 0.9em;
-        padding: 6px 12px;
+    body {
+        background-image: url('/static/img/fondo_profile.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+        color: #fff;
     }
 
     .profile-container {
-        margin-top: 60px;
-        padding: 10px;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        width: 95%;
-        max-width: 600px;
+        margin-top: 20px;
+        padding: 20px;
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 30px;
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .profile-card {
-        width: 100%;
-        max-width: 100%;
-        margin-bottom: 20px;
+        background: linear-gradient(145deg, rgba(30, 30, 30, 0.95), rgba(20, 20, 20, 0.98));
+        border: 1px solid rgba(255, 204, 0, 0.3);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        color: #ffffff;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .profile-card h2 {
+        color: #ffcc00;
+        margin: 10px 0;
+        font-size: 1.5em;
+        font-weight: 600;
     }
 
     .profile-photo img {
-        width: 120px;
-        height: 120px;
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid #ffcc00;
+        transition: transform 0.3s ease;
+    }
+
+    .profile-photo img:hover {
+        transform: scale(1.05);
+    }
+
+    .update-photo-btn {
+        background: linear-gradient(90deg, #ffcc00, #ffd700);
+        color: black;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        margin-top: 15px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .update-photo-btn:hover {
+        background: linear-gradient(90deg, #ffd700, #ffcc00);
+        box-shadow: 0 4px 10px rgba(255, 204, 0, 0.5);
+    }
+
+    .main-content {
+        background: linear-gradient(145deg, rgba(30, 30, 30, 0.95), rgba(20, 20, 20, 0.98));
+        border: 1px solid rgba(255, 204, 0, 0.3);
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
     }
 
     .money-containers {
         display: flex;
-        flex-direction: column;
-        gap: 15px;
+        justify-content: space-around;
+        margin-bottom: 30px;
     }
 
     .money-box {
-        width: 100%;
-        min-width: unset;
+        background: rgba(255, 204, 0, 0.1);
+        border: 1px solid rgba(255, 204, 0, 0.3);
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        min-width: 200px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .money-box h3 {
+        color: #ffcc00;
         margin-bottom: 10px;
+        font-size: 1.2em;
+        font-weight: 600;
+    }
+
+    .bills-section {
+        margin-top: 30px;
+    }
+
+    .bills-section h2 {
+        color: #ffcc00;
+        margin-bottom: 20px;
+        font-size: 1.5em;
+        font-weight: 600;
     }
 
     .bills-container {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
     }
 
     .bill-item {
-        width: 100%;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 204, 0, 0.3);
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
 
-    /* Tablet and desktop styles */
-    @media (min-width: 768px) {
+    .pay-btn {
+        background: linear-gradient(90deg, #ffcc00, #ffd700);
+        color: black;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        margin-top: 10px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .pay-btn:hover {
+        background: linear-gradient(90deg, #ffd700, #ffcc00);
+        box-shadow: 0 4px 10px rgba(255, 204, 0, 0.5);
+    }
+
+    .error-popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(145deg, rgba(30, 30, 30, 0.95), rgba(20, 20, 20, 0.98));
+        padding: 20px 40px;
+        border-radius: 10px;
+        border: 2px solid #ff3333;
+        color: #ff3333;
+        z-index: 1000;
+        text-align: center;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    @media (max-width: 768px) {
         .profile-container {
-            max-width: 1200px;
-            flex-direction: row;
-            padding: 20px;
+            grid-template-columns: 1fr;
+            padding: 10px;
+            gap: 20px;
         }
 
-        .profile-card {
-            width: 300px;
-            flex-shrink: 0;
-        }
-
-        .main-content {
-            flex-grow: 1;
+        .profile-photo img {
+            width: 120px;
+            height: 120px;
         }
 
         .money-containers {
-            flex-direction: row;
-            justify-content: space-around;
+            flex-direction: column;
+            gap: 15px;
         }
 
         .money-box {
-            width: 45%;
+            width: 100%;
         }
-
-        .bills-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        }
-
-        .nav-item {
-            font-size: 1.1em;
-            padding: 8px 20px;
-        }
-    }
-
-    /* Ensure error popup doesn't overflow */
-    .error-popup {
-        width: 90%;
-        max-width: 300px;
-        padding: 15px 20px;
     }
 </style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-card">
+        <div class="profile-photo">
+            <img src="{{ avatar_url }}" alt="Avatar de usuario">
+        </div>
+        <form id="avatarForm" enctype="multipart/form-data">
+            <input type="file" id="photoInput" name="photo" accept="image/*" style="display: none;">
+            <button type="button" class="update-photo-btn" onclick="document.getElementById('photoInput').click()">
+                Actualizar foto
+            </button>
+        </form>
+        <h2>{{ username }}</h2>
+        <p class="creation-date">{{ fecha_creacion }}</p>
+    </div>
+
+    <div class="main-content">
+        <div class="money-containers">
+            <div class="money-box">
+                <h3>Dinero en efectivo:</h3>
+                <p>${{ dinero_efectivo }}</p>
+            </div>
+            <div class="money-box">
+                <h3>Dinero en el banco:</h3>
+                <p>${{ dinero_banco }}</p>
+            </div>
+        </div>
+
+        <div class="bills-section">
+            <h2>Facturas:</h2>
+            <div class="bills-container">
+                <div class="bill-item">
+                    <h3>Luz:</h3>
+                    <p>{% if tiene_factura_luz %}${{ factura_luz }}{% else %}{{ factura_luz }}{% endif %}</p>
+                    {% if tiene_factura_luz %}
+                    <button class="pay-btn" onclick="pagarFactura('luz')">Pagar</button>
+                    {% endif %}
+                </div>
+                <div class="bill-item">
+                    <h3>Agua:</h3>
+                    <p>{% if tiene_factura_agua %}${{ factura_agua }}{% else %}{{ factura_agua }}{% endif %}</p>
+                    {% if tiene_factura_agua %}
+                    <button class="pay-btn" onclick="pagarFactura('agua')">Pagar</button>
+                    {% endif %}
+                </div>
+                <div class="bill-item">
+                    <h3>Vivienda:</h3>
+                    <p>{% if tiene_factura_vivienda %}${{ factura_vivienda }}{% else %}{{ factura_vivienda }}{% endif %}</p>
+                    {% if tiene_factura_vivienda %}
+                    <button class="pay-btn" onclick="pagarFactura('vivienda')">Pagar</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="error-popup" id="errorPopup"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    async function pagarFactura(tipo) {
+        try {
+            const response = await fetch('/pagar_factura', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ tipo: tipo })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                mostrarError(data.mensaje);
+            } else {
+                location.reload();
+            }
+        } catch (error) {
+            mostrarError('Error al procesar el pago');
+        }
+    }
+
+    function mostrarError(mensaje) {
+        const popup = document.getElementById('errorPopup');
+        popup.textContent = mensaje;
+        popup.style.display = 'block';
+
+        setTimeout(() => {
+            popup.style.display = 'none';
+        }, 3000);
+    }
+
+    document.getElementById('photoInput').addEventListener('change', async function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('photo', file);
+
+        try {
+            const response = await fetch('/update_avatar', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                document.querySelector('.profile-photo img').src = data.avatar_url + '?t=' + new Date().getTime();
+            } else {
+                mostrarError(data.error || 'Error al actualizar la foto');
+            }
+        } catch (error) {
+            mostrarError('Error al procesar la imagen');
+        }
+    });
+</script>
+{% endblock %}

@@ -197,45 +197,43 @@ def pagar_factura():
 
     try:
         with get_db_session() as conn:
-            # Update the payment query to include payment timestamp
-            result = conn.execute(text("""
-                WITH factura_info AS (
-                    SELECT f.id, f.monto, u.dinero_efectivo 
-                    FROM facturas f
-                    JOIN users u ON u.id = f.user_id
-                    WHERE u.username = :username 
-                    AND f.tipo = :tipo 
-                    AND (f.pagado = false OR (f.fecha_pago < NOW() - INTERVAL '1 minute'))
-                    LIMIT 1
-                )
-                UPDATE users 
-                SET dinero_efectivo = dinero_efectivo - (
-                    SELECT monto FROM factura_info
-                )
-                WHERE username = :username
-                AND EXISTS (
-                    SELECT 1 FROM factura_info
-                    WHERE dinero_efectivo >= monto
-                )
-                RETURNING id;
+            # First, get the factura amount and check if user has enough money
+            factura_info = conn.execute(text("""
+                SELECT f.id, f.monto, u.id as user_id, u.dinero_efectivo 
+                FROM facturas f
+                JOIN users u ON u.id = f.user_id
+                WHERE u.username = :username 
+                AND f.tipo = :tipo 
+                AND f.pagado = false
+                LIMIT 1
             """), {
                 "username": session['username'],
                 "tipo": tipo_factura
+            }).fetchone()
+
+            if not factura_info:
+                return jsonify({'mensaje': 'Factura no encontrada'}), 400
+
+            if factura_info.dinero_efectivo < factura_info.monto:
+                return jsonify({'mensaje': 'Fondos insuficientes'}), 400
+
+            # Update user's money
+            conn.execute(text("""
+                UPDATE users 
+                SET dinero_efectivo = dinero_efectivo - :monto
+                WHERE id = :user_id
+            """), {
+                "monto": factura_info.monto,
+                "user_id": factura_info.user_id
             })
 
-            if result.rowcount == 0:
-                return jsonify({'mensaje': 'Fondos insuficientes o factura no encontrada'}), 400
-
-            # Update the factura payment status with timestamp
+            # Mark bill as paid
             conn.execute(text("""
                 UPDATE facturas 
                 SET pagado = true, fecha_pago = NOW()
-                WHERE user_id = (SELECT id FROM users WHERE username = :username)
-                AND tipo = :tipo 
-                AND (pagado = false OR (fecha_pago < NOW() - INTERVAL '1 minute'));
+                WHERE id = :factura_id
             """), {
-                "username": session['username'],
-                "tipo": tipo_factura
+                "factura_id": factura_info.id
             })
 
             conn.commit()
@@ -250,3 +248,34 @@ def pagar_factura():
 def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
+
+# Add these new routes
+@app.route('/inicio')
+def inicio():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    return render_template('inicio.html')
+
+@app.route('/casino')
+def casino():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    return render_template('casino.html')
+
+@app.route('/trabajar')
+def trabajar():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    return render_template('trabajar.html')
+
+@app.route('/banco')
+def banco():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    return render_template('banco.html')
+
+@app.route('/tienda')
+def tienda():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    return render_template('tienda.html')
