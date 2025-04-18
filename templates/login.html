@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CasinoSim Login</title>
+    <!-- Add this CSS in the style section -->
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            background-color: #f0f0f0;
+            /* Placeholder background color */
+            background-image: url('/static/img/fondo_login.jpg');
+            /* Placeholder background image */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .login-container {
+            width: 80%;
+            max-width: 100%;
+            /* Adjust as needed */
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .login-box {
+            background-color: rgba(0, 0, 0, 0.7);
+            /* Semi-transparent dark background */
+            color: white;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+            /* For card positioning */
+        }
+
+        .logo h1 {
+            color: #ffcc00;
+            /* Yellowish color for CasinoSim */
+            font-size: 2.5em;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            font-size: 1em;
+            color: #ddd;
+            margin-top: 0;
+        }
+
+        .form-container {
+            margin-top: 50px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #e0e0e0;
+            /* Light grey input background */
+            color: #333;
+            font-size: 1em;
+        }
+
+        #login-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            border-radius: 30px;
+            border: 2px solid #d4af37;
+            background: transparent;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        #login-button:hover {
+            background-color: #e6b800;
+            /* Darker yellow on hover */
+        }
+
+        .register-link {
+            margin-top: 20px;
+            color: #ddd;
+            font-size: 0.9em;
+        }
+
+        .register-link a {
+            color: #ffcc00;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .card-image {
+            position: center;
+            bottom: -20px;
+            /* Position below the login box */
+            right: 20px;
+            /* Align to the right */
+        }
+
+        #card {
+            width: 80px;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.6);
+            animation: float 2s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(0, 10px);
+            }
+
+            100% {
+                transform: translate(0, 0);
+            }
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(145deg, rgba(30, 30, 30, 0.95), rgba(20, 20, 20, 0.98));
+            color: #d4af37;
+            padding: 20px 40px;
+            border-radius: 10px;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease-out;
+            border: 2px solid #d4af37;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            font-size: 1.1em;
+            text-align: center;
+            min-width: 300px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+            to {
+                opacity: 0;
+                transform: translate(-50%, -40%);
+            }
+        }
+    </style>
+</head>
+
+<body data-listener-added_27b09ee6="true">
+    <div class="login-container">
+        <div class="login-box">
+            <div class="logo">
+                <h1>CasinoSim</h1>
+                <p><em>Simulador de lo que puedes llegar a ganar o &iquest;perderlo todo?</em></p>
+            </div>
+            <div class="form-container">
+                <form id="loginForm" method="POST" action="/login">
+                    <div class="input-group">
+                        <label for="username">Nombre de usuario:</label>
+                        <input type="text" id="username" name="username" placeholder="Ingrese su usuario" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Contraseña:</label>
+                        <input type="password" id="password" name="password" placeholder="Ingrese tu contraseña" required>
+                    </div>
+                    <button type="submit" id="login-button">Ingresar</button>
+                </form>
+            </div>
+            <div class="register-link">
+                <p>&iquest;No tienes una cuenta aun? <a href="register">Registrate ya!</a></p>
+            </div>
+            <div class="card-image"><img src="static/img/card_login.png" alt="Carta" id="card"></div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginButton = document.getElementById('login-button');
+        
+            loginButton.addEventListener('mouseover', function() {
+                loginButton.style.transform = 'scale(1.05)';
+            });
+        
+            loginButton.addEventListener('mouseout', function() {
+                loginButton.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+    <!-- Add this right after the <body> tag -->
+    {% if error %}
+    <div class="popup" id="errorPopup">
+        <i class="fas fa-exclamation-circle"></i>
+        {{ error }}
+    </div>
+    {% endif %}
+
+    <!-- Update the script at the end of body -->
+    <script>
+        // Existing login button animation code...
+    
+        // Error popup handling
+        const errorPopup = document.getElementById('errorPopup');
+        if (errorPopup) {
+            errorPopup.style.display = 'block';
+            setTimeout(() => {
+                errorPopup.style.animation = 'fadeOut 0.3s ease-out';
+                setTimeout(() => {
+                    errorPopup.style.display = 'none';
+                }, 300);
+            }, 3000);
+        }
+    </script>
+
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</body>
+
+</html>
